@@ -260,7 +260,7 @@ public class Ifez : IInstruction {
 		_offset = offset & ~ 3;
 	}
 	public int Encode() {
-		return (0b100100 << 26) | _offset;
+		return (0b1001000 << 25) | _offset;
 	}
 }
 
@@ -270,7 +270,7 @@ public class Ifnz : IInstruction {
 		_offset = offset & ~ 3;
 	}
 	public int Encode() {
-		return (0b100101 << 26) | _offset;
+		return (0b1001001 << 25) | _offset;
 	}
 }
 
@@ -280,7 +280,7 @@ public class Ifmi : IInstruction {
 		_offset = offset & ~ 3;
 	}
 	public int Encode() {
-		return (0b100110 << 26) | _offset;
+		return (0b1001010 << 25) | _offset;
 	}
 }
 
@@ -290,7 +290,7 @@ public class Ifpl : IInstruction {
 		_offset = offset & ~ 3;
 	}
 	public int Encode() {
-		return (0b100111 << 26) | _offset;
+		return (0b1001011 << 25) | _offset;
 	}
 }
 

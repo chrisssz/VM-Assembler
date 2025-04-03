@@ -102,6 +102,7 @@ class Pass1 {
 
 	public static void WriteBytes(Dictionary<int, string[]> memory, Dictionary<int[], string> labels) {
 		using (BinaryWriter writer = new BinaryWriter(File.Open("tmp.txt", FileMode.Create))) {
+			writer.Write(new byte[] {0xDE, 0xAD, 0xBE, 0xEF});
 			foreach (var entry in memory) {
 				string cmd = entry.Value[0];
 
@@ -159,7 +160,11 @@ class Pass1 {
 				} else if (cmd == "pop") {
 					Pop pop;
 					if (entry.Value.Length == 2) {
-						pop = new Pop(int.Parse(entry.Value[1]));
+						try {
+							pop = new Pop(int.Parse(entry.Value[1]));
+						} catch {
+							pop = new Pop(int.Parse(entry.Value[1].Substring(2), System.Globalization.NumberStyles.HexNumber));
+						}
 					} else {
 						pop = new Pop();
 					}
@@ -216,17 +221,145 @@ class Pass1 {
 					}
 					writer.Write(stprint.Encode());
 				} else if (cmd == "call") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0];
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Call call = new Call(loc);
 					writer.Write(call.Encode());
 				} else if (cmd == "return") {
 					Return ret;
 					if (entry.Value.Length == 2) {
-						ret = new Return(int.Parse(entry.Value[1]));
+						try {
+							ret = new Return(int.Parse(entry.Value[1]));
+						} catch {
+							ret = new Return(int.Parse(entry.Value[1].Substring(2), System.Globalization.NumberStyles.HexNumber));
+						}
 					} else {
 						ret = new Return();
 					}
 					writer.Write(ret.Encode());
+				} else if (cmd == "goto") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Goto gogo = new Goto(loc);
+					writer.Write(gogo.Encode());
+				} else if (cmd == "ifeq") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifeq ifeq = new Ifeq(loc);
+					writer.Write(ifeq.Encode());
+				} else if (cmd == "ifne") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifne ifne = new Ifne(loc);
+					writer.Write(ifne.Encode());
+				} else if (cmd == "iflt") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Iflt iflt = new Iflt(loc);
+					writer.Write(iflt.Encode());
+				} else if (cmd == "ifgt") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifgt ifgt = new Ifgt(loc);
+					writer.Write(ifgt.Encode());
+				} else if (cmd == "ifle") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifle ifle = new Ifle(loc);
+					writer.Write(ifle.Encode());
+				} else if (cmd == "ifge") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifge ifge = new Ifge(loc);
+					writer.Write(ifge.Encode());
+				} else if (cmd == "ifez") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifez ifez = new Ifez(loc);
+					writer.Write(ifez.Encode());
+				} else if (cmd == "ifnz") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifnz ifnz = new Ifnz(loc);
+					writer.Write(ifnz.Encode());
+				} else if (cmd == "ifmi") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifmi ifmi = new Ifmi(loc);
+					writer.Write(ifmi.Encode());
+				} else if (cmd == "ifpl") {
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					Ifpl ifpl = new Ifpl(loc);
+					writer.Write(ifpl.Encode());
+				} else if (cmd == "dup") {
+					Dup dup;
+					if (entry.Value.Length == 2) {
+						try {
+							dup = new Dup(int.Parse(entry.Value[1]));
+						} catch {
+							dup = new Dup(int.Parse(entry.Value[1].Substring(2), System.Globalization.NumberStyles.HexNumber));
+						}
+					} else {
+						dup = new Dup();
+					}
+					writer.Write(dup.Encode());
+				} else if (cmd == "print") {
+					Print print;
+					if (entry.Value.Length == 2) {
+						try {
+							print = new Print(int.Parse(entry.Value[1]));
+						} catch {
+							print = new Print(int.Parse(entry.Value[1].Substring(2), System.Globalization.NumberStyles.HexNumber));
+						}
+					} else {
+						print = new Print();
+					}
+					writer.Write(print.Encode());
+				} else if (cmd == "printh") {
+					Printh printh;
+					if (entry.Value.Length == 2) {
+						try {
+							printh = new Printh(int.Parse(entry.Value[1]));
+						} catch {
+							printh = new Printh(int.Parse(entry.Value[1].Substring(2), System.Globalization.NumberStyles.HexNumber));
+						}
+					} else {
+						printh = new Printh();
+					}
+					writer.Write(printh.Encode());
+				} else if (cmd == "printb") {
+					Printb printb;
+					if (entry.Value.Length == 2) {
+						try {
+							printb = new Printb(int.Parse(entry.Value[1]));
+						} catch {
+							printb = new Printb(int.Parse(entry.Value[1].Substring(2), System.Globalization.NumberStyles.HexNumber));
+						}
+					} else {
+						printb = new Printb();
+					}
+					writer.Write(printb.Encode());
+				} else if (cmd == "printo") {
+					Printo printo;
+					if (entry.Value.Length == 2) {
+						try {
+							printo = new Printo(int.Parse(entry.Value[1]));
+						} catch {
+							printo = new Printo(int.Parse(entry.Value[1].Substring(2), System.Globalization.NumberStyles.HexNumber));
+						}
+					} else {
+						printo = new Printo();
+					}
+					writer.Write(printo.Encode());
+				} else if (cmd == "dump") {
+					Dump dump = new Dump();
+					writer.Write(dump.Encode());
+				} else {
+					Push push;
+					if (entry.Value.Length == 1) {
+						push = new Push();
+					} else {
+						try {
+							push = new Push(int.Parse(entry.Value[1]));
+						} catch {
+							if (entry.Value[1].Substring(0, 2) == "0x") {
+								push = new Push(int.Parse(entry.Value[1].Substring(2), System.Globalization.NumberStyles.HexNumber));
+							} else {
+								int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0];
+								push = new Push(loc);
+							}
+						}	
+					}
+					writer.Write(push.Encode());
 				}
 			}
 		}
