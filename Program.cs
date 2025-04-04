@@ -46,7 +46,7 @@ class Pass1 {
 
 				pushst = pushst.Replace("\\\\", "\\");
 				pushst = pushst.Replace("\\\"", "\"");
-				pushst = pushst.Replace("\\\n", "|");
+				pushst = pushst.Replace("\\n", "\n");
 
 				buf = "";
 				for (int i = 0; i < pushst.Length; i++) {
@@ -55,7 +55,6 @@ class Pass1 {
 					
 					if (i % 3 == 2 && i != pushst.Length-1) {
 						buf = "0x01" + buf;
-						/* Console.WriteLine(buf); */
 						hex.Add(buf);
 						buf = "";
 					} else if (i == pushst.Length-1) {
@@ -63,7 +62,6 @@ class Pass1 {
 							buf = "00" + buf;
 						}
 						buf = "0x" + buf;
-						/* Console.WriteLine(buf); */
 						hex.Add(buf);
 						buf = "";
 					}
@@ -75,18 +73,9 @@ class Pass1 {
 					memLoc += 4;
 				} 
 				hex.Clear();
-
-				memory.Add(memLoc, new string[] {"stprint"});
-
-				memLoc += 4;
 			}
 
 			lineNo++;
-				
-			/* foreach (string liner in split){ */
-    			/* Console.WriteLine(liner); */
-			/* } */
-
 		}
 
 		foreach (var entry in memory) {
@@ -237,47 +226,47 @@ class Pass1 {
 					}
 					writer.Write(ret.Encode());
 				} else if (cmd == "goto") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Goto gogo = new Goto(loc);
 					writer.Write(gogo.Encode());
 				} else if (cmd == "ifeq") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifeq ifeq = new Ifeq(loc);
 					writer.Write(ifeq.Encode());
 				} else if (cmd == "ifne") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifne ifne = new Ifne(loc);
 					writer.Write(ifne.Encode());
 				} else if (cmd == "iflt") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Iflt iflt = new Iflt(loc);
 					writer.Write(iflt.Encode());
 				} else if (cmd == "ifgt") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifgt ifgt = new Ifgt(loc);
 					writer.Write(ifgt.Encode());
 				} else if (cmd == "ifle") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifle ifle = new Ifle(loc);
 					writer.Write(ifle.Encode());
 				} else if (cmd == "ifge") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifge ifge = new Ifge(loc);
 					writer.Write(ifge.Encode());
 				} else if (cmd == "ifez") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifez ifez = new Ifez(loc);
 					writer.Write(ifez.Encode());
 				} else if (cmd == "ifnz") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifnz ifnz = new Ifnz(loc);
 					writer.Write(ifnz.Encode());
 				} else if (cmd == "ifmi") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifmi ifmi = new Ifmi(loc);
 					writer.Write(ifmi.Encode());
 				} else if (cmd == "ifpl") {
-					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - 8;
+					int loc = labels.FirstOrDefault(x => x.Value == entry.Value[1]).Key[0] - entry.Key;
 					Ifpl ifpl = new Ifpl(loc);
 					writer.Write(ifpl.Encode());
 				} else if (cmd == "dup") {
